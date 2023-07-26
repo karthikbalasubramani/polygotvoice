@@ -1,6 +1,12 @@
 # PolygotVoice
 PolygotVoice - A multilingual speech-to-text and text-to-speech application for seamless communication across languages.
 
+## My Stats
+![GitHub commits](https://img.shields.io/github/commit-activity/y/karthikbalasubramani/polygotvoice.svg?label=Commits)
+![GitHub Open PRs](https://img.shields.io/github/issues-pr-raw/karthikbalasubramani/polygotvoice.svg?label=Open%20Pull%20Requests)
+![GitHub Closed PRs](https://img.shields.io/github/issues-pr-closed/karthikbalasubramani/polygotvoice.svg?label=Closed%20Pull%20Requests)
+[![GitHub last commit](https://img.shields.io/github/last-commit/karthikbalasubramani/polygotvoice.svg?label=Last%20Commit)](https://github.com/karthikbalasubramani/connectify/commits/master)
+
 ## Technologies Used
 <div>
   <img src = "https://img.shields.io/badge/fastapi-109989?style=for-the-badge&logo=FASTAPI&logoColor=white">
@@ -11,14 +17,7 @@ PolygotVoice - A multilingual speech-to-text and text-to-speech application for 
 </div>
 
 ## Languages  
-[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=karthikbalasubramani&layout=compact)](https://github.com/karthikbalasubramani/polygotvoice)
-
-## Stats
-[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=karthikbalasubramani&hide=stars)](https://github.com/karthikbalasubramani/polygotvoice)
-
-
-## Summary Card
-<img width='500' src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=karthikbalasubramani" />
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=karthikbalasubramani&exclude_repo=connectify,SecurePassCLI&layout=compact)](https://github.com/karthikbalasubramani/polygotvoice)
 
 ## Quick Start
 ### 1. Cloning the polygotvoice Repository
