@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Translator Application Using Whisper Model</title>
+    <style>
+        body {
+            background-color: #1c3a56;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #F8F37E;
+            text-align: center;
+            padding: 5px 0;
+        }
+
+        h3 {
+            color: #F8F37E;
+            padding: 10px 0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: auto;
+            gap: 10px;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .segment {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 2px solid #333;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #293f4e;
+            color: #f8f8f8;
+            padding: 20px;
+            margin-bottom: 5px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .textbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .icon {
+            font-size: 30px;
+            margin-right: 10px;
+        }
+
+        .button {
+            background-color: #1c67b6;
+            color: #f8f8f8;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #1c4d9f;
+        }
+
+        .filename-placeholder {
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+            overflow: auto;
+        }
+
+        .numbered-list {
+            margin-top: 20px;
+        }
+		        .play-button {
+            background-color: #1c67b6;
+            color: #f8f8f8;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .play-button:hover {
+            background-color: #1c4d9f;
+        }
+
+        .numbered-list ol {
+            list-style-type: decimal;
+            padding-left: 20px;
+        }
+
+        .numbered-list li {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* Blinking animation for the microphone icon */
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Translator Application Using Whisper Model</h1>
+    <div class="container">
+        <div class="segment">
+            <div class="section">
+                <h3>Translator Using Whisper Model</h3>
+                <div class="section-title">Mic / Cancel</div>
+                <div class="textbox-container">
+                    <i class="fa fa-microphone icon" style="font-size:30px;color:red" onclick="startRecording(this)" disabled></i>
+                    <icon class="icon" style="margin-left: 20px; margin-right: 10px;" onclick="stopRecording(this)">&#10006;</icon>
+                </div>
+                <div class="numbered-list">
+                    <ol>
+                        <li>Start recording by clicking on the "Mic" icon.</li>
+                        <li>Stop recording by clicking on "Cancel" if you wish to do so.</li>
+                        <li>Wait for the result to be displayed in the text box area.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="segment">
+            <div class="section">
+                <h3>Translator Using Whisper Model</h3>
+                    <div id="file-section">
+      <input type="file" id="file-upload" accept="audio/*">
+      <button id="uploadBtn">Upload</button>
+    </div>
+                <div class="numbered-list">
+                    <ol>
+                        <li>When you click on the "Select File" button, a file browser will open.</li>
+                        <li>Choose the file that you want to translate the audio for.</li>
+                        <li>Wait for the result to be displayed in the text box area.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="segment">
+            <div class="section">
+                <h3>Translator Using Google API</h3>
+                <div class="section-title">Mic/Cancel</div>
+                <div class="textbox-container">
+                    <i class="fa fa-microphone icon" style="font-size:30px;color:red" onclick="startRecording(this)"></i>
+                    <icon class="icon" style="margin-left: 20px; margin-right: 10px;" onclick="stopRecording(this)">&#10006;</icon>
+                </div>
+                <div class="numbered-list">
+                    <ol>
+                        <li>Start recording by clicking on the "Mic" icon.</li>
+                        <li>Stop recording by clicking on "Cancel" if you wish to do so.</li>
+                        <li>Wait for the result to be displayed in the text box area.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="segment" style="margin-bottom: 0; border-radius: 0px">
+            <div class="section">
+         <div class="section-title" style="display: flex; align-items: center;">
+            Translated Text
+                <i class="fa fa-refresh icon" style="font-size: 20px; color: #f8f8f8; cursor: pointer; margin-left: 20px;" onclick="refreshTranslation()"></i>
+        </div>
+				<div class="textbox-container">
+                    <textarea id="textarea" placeholder="Translated text..." readonly></textarea>
+                </div>
+        </div>
+			    <div class="segment">
+        <div class="section">
+                <div id="audio-player">
+                    <input type="button" class="play-button" value="PLAY" onclick="play()">
+                </div>
+        </div>
+    </div>
+    </div>
+    <script>
+      let mediaRecorder;
+      let recordedChunks = [];
+      let socket;
+      let isRecording = false;
+
+	   let audioBase64;
+
+	   function play() {
+
+	   let snd = new Audio("data:audio/wav;base64," + audioBase64);
+snd.play();
+      }
+
+  const connectWebSocket = () => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      return;
+    }
+    socket = new WebSocket('ws://localhost:8000/ws');
+    socket.addEventListener('open', () => {
+      console.log("WebSocket connection established");
+      socket.addEventListener('message', handleWebSocketMessage);
+    });
+  };
+
+  // Call the connectWebSocket functio
+	connectWebSocket();
+      const startRecording = async () => {
+        if (isRecording) {
+          console.log("Already recording");
+          return;
+        }
+
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+
+          mediaRecorder.addEventListener('dataavailable', (event) => {
+            recordedChunks.push(event.data);
+            if (socket.readyState === WebSocket.OPEN) {
+              socket.send(event.data);
+            }
+          });
+
+          mediaRecorder.addEventListener('stop', () => {
+			console.log("stopped")
+            if (socket.readyState === WebSocket.OPEN) {
+socket.send(new Uint8Array([115, 116, 111, 112]));            }
+          });
+
+          mediaRecorder.start();
+          isRecording = true;
+          connectWebSocket();
+        } catch (error) {
+          console.error("Error starting recording:", error);
+        }
+      };
+      document.getElementById('uploadBtn').addEventListener('click', () => {
+	  connectWebSocket();
+      const fileInput = document.getElementById('file-upload');
+      const file = fileInput.files[0];
+      console.log(file)
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          console.log(socket.readyState === WebSocket.OPEN)
+          const fileBytes = new Uint8Array(event.target.result);
+          console.log(fileBytes)
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.send(fileBytes);
+          }
+        };
+
+        reader.onerror = (event) => {
+          console.error('Error:', event.target.error);
+        };
+
+        reader.readAsArrayBuffer(file);
+      }
+    });
+      const stopRecording = () => {
+        if (!isRecording) {
+          console.log("No active recording");
+          return;
+        }
+
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.send(recordedChunks);
+        }
+
+        mediaRecorder.stop();
+        isRecording = false;
+      };
+
+      const disconnectWebSocket = () => {
+        if (socket) {
+          socket.removeEventListener('message', handleWebSocketMessage);
+          socket.close();
+        }
+      };
+
+function updateAudioPlayer(blob) {
+    const audioPlayer = document.getElementById('audio-player');
+    const audioUrl = URL.createObjectURL(blob);
+	console.log(blob)
+    audioPlayer.src = audioUrl;
+    audioPlayer.controls = true;
+}
+      const handleWebSocketMessage = (event) => {
+        const recordingResponseElement = document.getElementById('textarea');
+		    const message = JSON.parse(event.data);
+            recordingResponseElement.value = message.text;
+    audioBase64 = message.audiobytes;
+	console.log("audioBase64", audioBase64);
+	let snd = new Audio("data:audio/wav;base64," + audioBase64);
+snd.play();
+
+    const audioBytes = Uint8Array.from(atob(audioBase64), c => c.charCodeAt(0));
+
+    // Create a Blob from the audio bytes
+    const blob = new Blob([audioBytes], { type: 'audio/mpeg' });
+
+    updateAudioPlayer(blob);
+		if (socket.readyState === WebSocket.OPEN) {
+			socket.send(new Uint8Array([115, 116, 111, 112]));	            }
+      };
+
+      document.getElementById('micBtn').addEventListener('click', () => {
+        startRecording();
+      });
+
+      document.getElementById('cancelBtn').addEventListener('click', () => {
+        stopRecording();
+      });
+
+      window.addEventListener('load', () => {
+        disconnectWebSocket();
+      });
+	  connectWebSocket();
+	  document.addEventListener('DOMContentLoaded', () => {
+    const audioPlayer = document.getElementById('audio-player');
+    updateAudioPlayer(null);
+});
+    </script>
+</body>
+</html>
